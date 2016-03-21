@@ -34,97 +34,118 @@ def viewSurroundingPlanets():
     screen.addstr(10,5, "Surrounding Planets")
     screen.refresh()
     screen.getch()
-            
+
+
+def viewPlanetChoice():
+
+    x = screen.getch()
+
+    
+
+    if x == ord("+"):
+        playerList = [user, easy]
+        TimeMechanics.updateEVERYTHING(playerList, planets)
+
+
+        
+        return True
+
+    else: 
+        return False
+
 def viewPlanet():
-    screen.clear()
-    screen.border(0)
+    quitLoop = True
+    while quitLoop == True:
+        screen.clear()
+        screen.border(0)
     
 
-    userPlanet = user['planets'][0]
+        userPlanet = user['planets'][0]
    # currentPlanet = planets[userPlanet]
-    population = userPlanet['population']
-    water = userPlanet['water']
-    REE = userPlanet['REE']
-    debris = userPlanet['resource']['debris']
-    waterResource = userPlanet['resource']['waterResource']
-    foodResource = userPlanet['resource']['foodResource']
-    REEResource = userPlanet['resource']['REEResource']
+        population = userPlanet['population']
+        water = userPlanet['water']
+        REE = userPlanet['REE']
+        debris = userPlanet['resource']['debris']
+        waterResource = userPlanet['resource']['waterResource']
+        foodResource = userPlanet['resource']['foodResource']
+        REEResource = userPlanet['resource']['REEResource']
 
 
 
-    ######################
-    #                    #
-    #   Left Hand Side   #
-    #                    #
-    ######################
+        ######################
+        #                    #
+        #   Left Hand Side   #
+        #                    #
+        ######################
 
 
-    screen.addstr(2,2, "Planet list.") 
+        screen.addstr(2,2, "Planet list.") 
 
-    for i, planetName in enumerate(user['planets']):
-        screen.addstr(4+i,2,"%d. %s" %(i+1, planetName["name"]))
-    
-
-
-    for i in xrange(1,27):
-        screen.addstr(i,15, "#")
-
-       #population = "200"
-
-    screen.addstr(2, 20, "Planet Information")
-    screen.addstr(4, 20, "Name:                 p1")
+        for i, planetName in enumerate(user['planets']):
+            screen.addstr(4+i,2,"%d. %s" %(i+1, planetName["name"]))
+        
 
 
+        for i in xrange(1,27):
+            screen.addstr(i,15, "#")
 
-    screen.addstr(6, 20, "Population:           %d" % population)
-    screen.addstr(7, 20, "Water Resources:      %d" % waterResource)
-    screen.addstr(8, 20, "Food Resources:       %d" % foodResource)
-    screen.addstr(9, 20, "Rare Earth's:         %d" % REEResource)
-    screen.addstr(10,20, "Debris:               %d" % debris)
+           #population = "200"
+
+        screen.addstr(2, 20, "Planet Information")
+        screen.addstr(4, 20, "Name:                 p1")
 
 
 
-
-    for i in xrange(1,27):
-        screen.addstr(i,51, "#")
-
-
-    screen.addstr(2, 55, "Game information")
-    screen.addstr(4, 55, "Time                 100 ")
-    screen.addstr(5, 55, "Turns                100 ")
-
-
-    screen.addstr(7, 55, "Misc")
-    screen.addstr(9, 55, "Water:                %d" % water)
-    screen.addstr(10, 55,"REE:                  %d" % REE)
+        screen.addstr(6, 20, "Population:           %d" % population)
+        screen.addstr(7, 20, "Water Resources:      %d" % waterResource)
+        screen.addstr(8, 20, "Food Resources:       %d" % foodResource)
+        screen.addstr(9, 20, "Rare Earth's:         %d" % REEResource)
+        screen.addstr(10,20, "Debris:               %d" % debris)
 
 
 
 
-    screen.addstr(15, 20, "Buildings            ")
-    screen.addstr(17, 20, "Mine:                1")
-    screen.addstr(18, 20, "Farm:                1")
-    screen.addstr(19, 20, "Desalination:        1")
-
-    # Fleets section
+        for i in xrange(1,27):
+            screen.addstr(i,51, "#")
 
 
+        screen.addstr(2, 55, "Game information")
+        screen.addstr(4, 55, "Time                 100 ")
+        screen.addstr(5, 55, "Turns                100 ")
+
+
+        screen.addstr(7, 55, "Misc")
+        screen.addstr(9, 55, "Water:                %d" % water)
+        screen.addstr(10, 55,"REE:                  %d" % REE)
 
 
 
 
+        screen.addstr(15, 17, "   Buildings            ")
+        screen.addstr(17, 17, "M. Mine:                1")
+        screen.addstr(18, 17, "F. Farm:                1")
+        screen.addstr(19, 17, "D. Desalination:        1")
 
-
-    screen.addstr(15, 55, "Fleet Information")
+        # Fleets section
 
 
 
 
 
 
-    
-    screen.refresh()
-    screen.getch()
+
+
+        screen.addstr(15, 55, "Fleet Information")
+
+
+
+
+
+
+        
+        screen.refresh()
+
+        quitLoop = viewPlanetChoice()
 
 def viewFleet():
     
@@ -168,7 +189,7 @@ if __name__ == "__main__":
                 "name"          : "Hydrius",
                 "planets"       : None,
                 "turns"         : 100,
-                "population"    : 100,
+                #"population"    : 100,
                 "fighters"      : 100,
                 "bombers"       : 100,
                 "cargo"         : 1
@@ -225,6 +246,13 @@ if __name__ == "__main__":
                     "REE"       : 3,
                     "water"     : 3,
                     "debris"    : 100,
+                    "resource": {
+                        "debris"    : 100,
+                        "waterResource": 500,
+                        "foodResource": 500,
+                        "REEResource"       : 200,
+                    },
+
                     "waterResource": 500,
                     "foodResource": 500,
                     "REEResource"       : 200,
