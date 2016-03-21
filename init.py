@@ -1,6 +1,8 @@
 import curses
 from AboveTheClouds import Mechanics
 import pickle
+from TimeMechanics import TimeMechanics
+import copy
 
 # TO DO
 #
@@ -38,13 +40,13 @@ def viewPlanet():
     screen.border(0)
     
     userPlanet = user['planets'][0]
-    currentPlanet = planets[userPlanet]
-    population = currentPlanet['population']
+   # currentPlanet = planets[userPlanet]
+    population = userPlanet['population']
 
     #population = "200"
 
     for i, planetName in enumerate(user['planets']):
-        screen.addstr(2+i,2,"%d. %s" %(i+1, planetName))
+        screen.addstr(2+i,2,"%d. %s" %(i+1, planetName["name"]))
         
     screen.addstr(5, 60, "Population: %d" % population)
 
@@ -74,7 +76,7 @@ if __name__ == "__main__":
    
     user    = {
                 "name"          : "Hydrius",
-                "planets"       : ["p1", "testPlanet"],
+                "planets"       : None,
                 "population"    : 100,
                 "fighters"      : 100,
                 "bombers"       : 100,
@@ -82,7 +84,7 @@ if __name__ == "__main__":
             } 
     easy    = {
                 "name"          : "easy",
-                "Planets"       : ["p2"],
+                "planets"       : None,
                 "population"    : 100,
                 "fighters"      : 100,
                 "bombers"       : 100,
@@ -96,6 +98,7 @@ if __name__ == "__main__":
     planets = {
                 "p1": 
                 {
+                    "name": "p1",
                     "owner": "hydrius",
                     "population": 100,
                     "RRE"       : 3,
@@ -122,13 +125,14 @@ if __name__ == "__main__":
                  }
                 }
  
+    # create a pointer to planets
+    user["planets"] = [copy.deepcopy(planets["p1"])]
+    easy["planets"] = [copy.deepcopy(planets["p2"])]
 
 
 
 
-
-
-
+    TimeMechanics = TimeMechanics()
             
 
 
@@ -186,6 +190,11 @@ if __name__ == "__main__":
 
         if x == ord('8'):
             about()
+
+        if x == ord('+'):
+            #player list should be in a class + function somewhere.
+            playerList = [user, easy]
+            TimeMechanics.updateEVERYTHING(playerList, planets)
 
         screen.refresh()
 
