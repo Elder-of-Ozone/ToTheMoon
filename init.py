@@ -3,6 +3,7 @@ from AboveTheClouds import Mechanics
 import pickle
 from TimeMechanics import TimeMechanics
 import copy
+from buildings import buildings
 
 # TO DO
 #
@@ -35,22 +36,38 @@ def viewSurroundingPlanets():
     screen.refresh()
     screen.getch()
 
+# TODO
+def planetVisible():
+    return False
 
-def viewPlanetChoice():
+
+def viewPlanetChoice(planet):
 
     x = screen.getch()
 
-    
-
     if x == ord("+"):
         playerList = [user, easy]
-        TimeMechanics.updateEVERYTHING(playerList, planets)
-
-
-        
+        global time
+        time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
         return True
 
-    else: 
+
+
+    elif x == ord("m"):
+        if buildings.builds("mine", user, planet) == False:
+            screen.addstr(23, 17, "Not enough resources")
+        return True
+    elif x == ord("f"):
+        if buildings.builds("farm", user, planet) == False:
+            screen.addstr(23, 17, "Not enough resources")
+        return True
+    elif x == ord("d"):
+        if buildings.builds("desalination", user, planet) == False:
+            screen.addstr(23,17, "Not enough resources")
+        return True
+        print "tet"
+
+    elif x == ord("q"): 
         return False
 
 def viewPlanet():
@@ -61,7 +78,10 @@ def viewPlanet():
     
 
         userPlanet = user['planets'][0]
-   # currentPlanet = planets[userPlanet]
+        
+        turns = user['turns']
+
+        name = userPlanet['name']
         population = userPlanet['population']
         water = userPlanet['water']
         REE = userPlanet['REE']
@@ -70,6 +90,10 @@ def viewPlanet():
         foodResource = userPlanet['resource']['foodResource']
         REEResource = userPlanet['resource']['REEResource']
 
+        mine = userPlanet['building']['mine']
+        farm = userPlanet['building']['farm']
+        desalination = userPlanet['building']['desalination']
+        
 
 
         ######################
@@ -92,7 +116,7 @@ def viewPlanet():
            #population = "200"
 
         screen.addstr(2, 20, "Planet Information")
-        screen.addstr(4, 20, "Name:                 p1")
+        screen.addstr(4, 20, "Name:                 %s" % name)
 
 
 
@@ -110,21 +134,22 @@ def viewPlanet():
 
 
         screen.addstr(2, 55, "Game information")
-        screen.addstr(4, 55, "Time                 100 ")
-        screen.addstr(5, 55, "Turns                100 ")
+        screen.addstr(4, 55, "Time                 %d " % time)
+        screen.addstr(5, 55, "Turns                %d " % turns)
+        screen.addstr(6, 55, "Visible?             %r" % planetVisible())
 
 
-        screen.addstr(7, 55, "Misc")
-        screen.addstr(9, 55, "Water:                %d" % water)
-        screen.addstr(10, 55,"REE:                  %d" % REE)
+        screen.addstr(8, 55, "Misc")
+        screen.addstr(10, 55, "Water:                %d" % water)
+        screen.addstr(11, 55,"REE:                  %d" % REE)
 
 
 
 
         screen.addstr(15, 17, "   Buildings            ")
-        screen.addstr(17, 17, "M. Mine:                1")
-        screen.addstr(18, 17, "F. Farm:                1")
-        screen.addstr(19, 17, "D. Desalination:        1")
+        screen.addstr(17, 17, "M. Mine:                %d" % mine)
+        screen.addstr(18, 17, "F. Farm:                %d" % farm)
+        screen.addstr(19, 17, "D. Desalination:        %d" % desalination)
 
         # Fleets section
 
@@ -145,9 +170,10 @@ def viewPlanet():
         
         screen.refresh()
 
-        quitLoop = viewPlanetChoice()
+        quitLoop = viewPlanetChoice(userPlanet)
 
 def viewFleet():
+
     
     #   OUTGOINGS
     #
@@ -184,23 +210,19 @@ def about():
 
 
 if __name__ == "__main__":
+
+    time = 0
+
    
     user    = {
                 "name"          : "Hydrius",
                 "planets"       : None,
                 "turns"         : 100,
-                #"population"    : 100,
-                "fighters"      : 100,
-                "bombers"       : 100,
-                "cargo"         : 1
             } 
     easy    = {
                 "name"          : "easy",
                 "planets"       : None,
-                "population"    : 100,
-                "fighters"      : 100,
-                "bombers"       : 100,
-                "cargo"         : 1
+                "turns"         : 100, 
             }
     medium  = {}
     hard    = {}
@@ -253,6 +275,12 @@ if __name__ == "__main__":
                         "REEResource"       : 200,
                     },
 
+                    "building" : {
+                        "mine":         2,
+                        "farm":         3,
+                        "desalination": 2
+                        },
+
                     "waterResource": 500,
                     "foodResource": 500,
                     "REEResource"       : 200,
@@ -274,7 +302,6 @@ if __name__ == "__main__":
 
 
 
-    TimeMechanics = TimeMechanics()
             
 
 
@@ -336,7 +363,7 @@ if __name__ == "__main__":
         if x == ord('+'):
             #player list should be in a class + function somewhere.
             playerList = [user, easy]
-            TimeMechanics.updateEVERYTHING(playerList, planets)
+            time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
 
         if x == ord('q'):
                 break
