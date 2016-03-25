@@ -4,6 +4,7 @@ import pickle
 from TimeMechanics import TimeMechanics
 import copy
 from buildings import buildings
+import sys
 
 # TO DO
 #
@@ -49,35 +50,42 @@ def viewPlanetChoice(planet):
         playerList = [user, easy]
         global time
         time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
-        return True
+        
 
 
 
     elif x == ord("m"):
         if buildings.builds("mine", user, planet) == False:
             screen.addstr(23, 17, "Not enough resources")
-        return True
+        
     elif x == ord("f"):
         if buildings.builds("farm", user, planet) == False:
             screen.addstr(23, 17, "Not enough resources")
-        return True
+        
     elif x == ord("d"):
         if buildings.builds("desalination", user, planet) == False:
             screen.addstr(23,17, "Not enough resources")
-        return True
-        print "tet"
+        
+        
 
     elif x == ord("q"): 
-        return False
+        menu()
+
+    elif x == ord("1"):
+        user['viewPlanetIndex'] = 0
+    elif x == ord("2"):
+        user['viewPlanetIndex'] = 1
+
+
+    
 
 def viewPlanet():
-    quitLoop = True
-    while quitLoop == True:
+        
         screen.clear()
         screen.border(0)
     
 
-        userPlanet = user['planets'][0]
+        userPlanet = user['planets'][user['viewPlanetIndex']]
         
         turns = user['turns']
 
@@ -161,16 +169,78 @@ def viewPlanet():
 
 
         screen.addstr(15, 55, "Fleet Information")
-
-
-
-
-
-
         
         screen.refresh()
 
-        quitLoop = viewPlanetChoice(userPlanet)
+        viewPlanetChoice(userPlanet)
+        viewPlanet()
+
+def menu():
+    x = 0
+    while x != ord('9'):
+
+
+        #ASCII Name came from 
+        #http://patorjk.com/software/taag/#p=display&h=1&v=1&f=Slant&t=To%20The%20Moon
+        name1 = "   ______          ______ __             __  ___   "
+        name2 = "  /_  __/____     /_  __// /_   ___     /  |/  /____   ____   ____ "
+        name3 = "   / /  / __ \     / /  / __ \ / _ \   / /|_/ // __ \ / __ \ / __ \ "
+        name4 = "  / /  / /_/ /    / /  / / / //  __/  / /  / // /_/ // /_/ // / / /"
+        name5 = " /_/   \____/    /_/  /_/ /_/ \___/  /_/  /_/ \____/ \____//_/ /_/ "
+                                                                                    
+
+
+
+        message = "Welcome Captain! We await your orders!"
+
+
+        #Mechanics = Mechanics.start()
+        #Mechanics.start()
+        #if not Mechanics.start()
+        screen.clear()
+        screen.border(0)
+        screen.addstr(1,5, name1)
+        screen.addstr(2,5, name2)
+        screen.addstr(3,5, name3)
+        screen.addstr(4,5, name4)
+        screen.addstr(5,5, name5)
+
+        screen.addstr(7,2, message)
+        mainMenu()
+        screen.refresh()
+        x = screen.getch()
+    
+        if x == ord('1'):
+            viewPlanet()
+    
+        if x == ord('2'):
+            viewFleet()
+   
+        if x == ord('3'):
+            viewSurroundingPlanets()
+
+        if x == ord('4'):
+            order = get_param("Enter orders")
+
+        if x == ord('8'):
+            about()
+
+        if x == ord('+'):
+            #player list should be in a class + function somewhere.
+            playerList = [user, easy]
+            time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
+
+        if x == ord('q'):
+            sys.exit()
+            break
+            curses.endwin()
+            sys.exit()
+
+        screen.refresh()
+
+    curses.endwin()
+
+
 
 def viewFleet():
 
@@ -209,15 +279,23 @@ def about():
 
 
 
-if __name__ == "__main__":
 
+
+
+
+
+
+
+if __name__ == "__main__":
+    
+    # Need to put time in a global dict
     time = 0
 
-   
     user    = {
                 "name"          : "Hydrius",
                 "planets"       : None,
                 "turns"         : 100,
+                "viewPlanetIndex": 0
             } 
     easy    = {
                 "name"          : "easy",
@@ -300,78 +378,10 @@ if __name__ == "__main__":
     easy["planets"] = [copy.deepcopy(planets["p2"])]
 
 
-
-
-            
-
-
-
-    x = 0
-
     screen = curses.initscr()
     screen.clear()
     screen.border(0)
-
-    while x != ord('9'):
-
-
-        #ASCII Name came from 
-        #http://patorjk.com/software/taag/#p=display&h=1&v=1&f=Slant&t=To%20The%20Moon
-        name1 = "   ______          ______ __             __  ___   "
-        name2 = "  /_  __/____     /_  __// /_   ___     /  |/  /____   ____   ____ "
-        name3 = "   / /  / __ \     / /  / __ \ / _ \   / /|_/ // __ \ / __ \ / __ \ "
-        name4 = "  / /  / /_/ /    / /  / / / //  __/  / /  / // /_/ // /_/ // / / /"
-        name5 = " /_/   \____/    /_/  /_/ /_/ \___/  /_/  /_/ \____/ \____//_/ /_/ "
-                                                                                        
-
-
-
-        message = "Welcome Captain! We await your orders!"
-
-
-        #Mechanics = Mechanics.start()
-        #Mechanics.start()
-        #if not Mechanics.start()
-        screen.clear()
-        screen.border(0)
-        screen.addstr(1,5, name1)
-        screen.addstr(2,5, name2)
-        screen.addstr(3,5, name3)
-        screen.addstr(4,5, name4)
-        screen.addstr(5,5, name5)
-
-        screen.addstr(7,2, message)
-        mainMenu()
-        screen.refresh()
-        x = screen.getch()
-        
-        if x == ord('1'):
-            viewPlanet()
-        
-        if x == ord('2'):
-            viewFleet()
-       
-        if x == ord('3'):
-            viewSurroundingPlanets()
-
-        if x == ord('4'):
-            order = get_param("Enter orders")
-
-        if x == ord('8'):
-            about()
-
-        if x == ord('+'):
-            #player list should be in a class + function somewhere.
-            playerList = [user, easy]
-            time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
-
-        if x == ord('q'):
-                break
-                curses.endwin()
-
-        screen.refresh()
-
-curses.endwin()
+    menu()
 
 
 
