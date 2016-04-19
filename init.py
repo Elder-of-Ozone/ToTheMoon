@@ -5,6 +5,7 @@ from TimeMechanics import TimeMechanics
 import copy
 from buildings import buildings
 import sys
+from fleet import fleets
 
 # TO DO
 #
@@ -51,9 +52,6 @@ def viewPlanetChoice(planet):
         global time
         time = TimeMechanics.updateEVERYTHING(playerList, planets, time)
         
-
-
-
     elif x == ord("m"):
         if buildings.builds("mine", user, planet) == False:
             screen.addstr(23, 17, "Not enough resources")
@@ -266,9 +264,85 @@ def viewFleet():
 
     screen.clear()
     screen.border(0)
-    screen.addstr(10,5, "viewing fleet")
+    screen.addstr(4,5, "OUTGOING")
+
+    screen.addstr(6,5, "Fleet Name")
+    screen.addstr(6, 20, "Origin")
+    screen.addstr(6, 35, "Destination")
+    screen.addstr(6,55, "Time")
+    screen.addstr(6,65, "Departed")
+
+    for i, fleetname in enumerate(user["fleets"]):
+
+        screen.addstr(8+i,5, "%d: %s" % (i +1, fleetname["name"]))
+        screen.addstr(8+i,20, "%s" % fleetname["origin"])
+        screen.addstr(8+i,35, "%s" % fleetname["destination"])
+        screen.addstr(8+i,55, "%d" % fleetname["time"])
+        screen.addstr(8+i,65, "%r" % fleetname["departed"])
+
+    #box1 = curses.newwin(20, 20, 5, 5)
+    #box1.box()    
+        
+    #screen.refresh()
+    #box1.refresh()
+    screen.addstr(18, 5, "INCOMING")    
+    screen.addstr(20,5, "Fleet Name")
+    screen.addstr(20, 20, "Origin")
+    screen.addstr(20, 35, "Destination")
+    screen.addstr(20,55, "Time")
+    screen.addstr(20,65, "Departed")
+
+   
+    
+    
+
     screen.refresh()
-    screen.getch()
+    
+    fleetChoices()
+    viewFleet()
+
+
+def fleetBox():
+    box1 = curses.newwin(20,30,5,25)
+    box1.box()
+
+    box1.addstr(2,11, "Options")
+    box1.addstr(5,11, "1. View")
+    box1.addstr(6,11, "2. Move")
+    box1.addstr(7,11, "3. Attack")
+    box1.addstr(8,11, "4. Pickup")
+    box1.addstr(9,11, "5. Drop")
+
+    box1.refresh()
+    fleetBoxChoices(box1)
+    fleetBox()
+def fleetBoxChoices(box1):
+    x = screen.getch()
+
+    if x == ord("1"):
+        box1.addstr(1,1,"moving")
+        box1.refresh()
+        screen.getch()
+    if x ==ord("q"):
+        viewFleet()
+
+
+def fleetChoices():
+   
+    x = screen.getch()
+
+    if x == ord("1"):
+        fleetBox()
+
+    if x == ord("2"):
+        fleetBox()
+
+
+    if x ==ord("q"):
+        menu()
+
+
+
 
 def about():
     screen.clear()
@@ -294,7 +368,8 @@ if __name__ == "__main__":
     user    = {
                 "name"          : "Hydrius",
                 "planets"       : None,
-                "turns"         : 100,
+                "fleets"        : None,
+               "turns"         : 100,
                 "viewPlanetIndex": 0
             } 
     easy    = {
@@ -305,7 +380,29 @@ if __name__ == "__main__":
     medium  = {}
     hard    = {}
 
-
+    fleets = {
+                "fleet1": {
+                            "name": "fleet1",
+                            "origin": "p1",
+                            "destination": "p2",
+                            "time":     10,
+                            "departed": False,
+                            "fleet": {
+                                "fighters": 20,
+                                }
+                            },
+                "fleet2": {
+                            "name": "fleet2",
+                            "origin": "p2",
+                            "destination": "p1",
+                            "time":     10,
+                            "departed": False,
+                            "fleet": {
+                                "fighters": 20,
+                                }
+                            }
+            }
+            
 
     planets = {
                 "p1": 
@@ -376,6 +473,7 @@ if __name__ == "__main__":
     # create a pointer to planets
     user["planets"] = [copy.deepcopy(planets["p1"]), copy.deepcopy(planets["p2"])]
     easy["planets"] = [copy.deepcopy(planets["p2"])]
+    user["fleets"] = [copy.deepcopy(fleets["fleet2"]), copy.deepcopy(fleets["fleet1"])]
 
 
     screen = curses.initscr()

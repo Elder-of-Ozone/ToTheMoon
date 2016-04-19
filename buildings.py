@@ -1,33 +1,35 @@
 class buildings:
 
     @staticmethod
-    def builds(building, player, planet, *args):
+    def builds(building, quantity, player, planet, time, *kwargs):
         success = 0
+        #planet = player['planets'][player['viewPlanetIndex']]
+
         for key in buildings.buildings[building]["cost"].keys():
-            if planet['resource'][key] - buildings.buildings[building]["cost"][key] > 0:
+            if planet['resource'][key] - (buildings.buildings[building]["cost"][key] * quantity) > 0:
                 success +=1
 
         if success == len(buildings.buildings[building]["cost"]):
             for key in buildings.buildings[building]["cost"].keys():
-                planet['resource'][key] -= buildings.buildings[building]["cost"][key]      
+                planet['resource'][key] -= buildings.buildings[building]["cost"][key]*quantity      
 
-            planet['building'][building] +=1
+            planet['building'][building] +=quantity
             return True
         else:
             return False
 
     buildings = {"mine": {
                         "cost":  {
-                                    "REEResource": 200,
-                                    "waterResource": 100
+                                    "REE": 200,
+                                    "water": 100
                                  },
                         "output": 100,
                         "requirements": None
                          },
                 "farm": {
                         "cost": {
-                                    "REEResource": 200,
-                                    "waterResource": 100
+                                    "REE": 200,
+                                    "water": 100
                                     
                                 },
                         "output": 100,
@@ -35,8 +37,8 @@ class buildings:
                         },
                 "desalination": {
                         "cost": {
-                                    "REEResource": 200,
-                                    "waterResource": 100
+                                    "REE": 200,
+                                    "water": 100
                                 },
                         "output": 100,
                         "requirements": None
